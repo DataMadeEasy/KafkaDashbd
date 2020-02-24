@@ -23,7 +23,8 @@ class listener(StreamListener):
         all_data = json.loads(data)
         tweet = all_data["text"]
         username = all_data["user"]["screen_name"]
-        jsontest = {username:tweet}
+        tweettime = all_data["created_at"]
+        jsontest = {"username": username, "tweet": tweet, "time": tweettime, "count":1}
         print(jsontest)
         jd = json.dumps(jsontest)
         producer.send('numtest', jd.encode('utf-8'))
@@ -36,4 +37,4 @@ auth = OAuthHandler(ckey, csecret)
 auth.set_access_token(atoken, asecret)
 
 twitterStream = Stream(auth, listener())
-twitterStream.filter(track=["#Bloomberg"])
+twitterStream.filter(track=["Trump"])

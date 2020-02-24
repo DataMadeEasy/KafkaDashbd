@@ -1,16 +1,18 @@
 from kafka import KafkaConsumer
 from json import loads
+import credentials, json, urllib.request
+from urllib.error import HTTPError
+import urllib3
 
 
-
-consumer = KafkaConsumer(
-    'numtest',
-     bootstrap_servers=['104.211.12.114:9092'],
-     auto_offset_reset='earliest',
-     enable_auto_commit=True,
-     group_id='my-group',
-     value_deserializer=lambda x: loads(x.decode('utf-8')))
+consumer = KafkaConsumer('numtest', group_id='my-group', bootstrap_servers= 'PL-KAFKA-1')
+url = credentials.PowerBICredentials['URLEndpoint']
+http = urllib3.PoolManager()
 
 for message in consumer:
-    message = message.value
-    print(message)
+    msg = bytes.decode(message.value)
+    msglist = msg.split(";")
+    d = json.loads(msg)
+    print(type(d))
+    print(d)
+    r = http.request('POST', url ,headers={'Content-Type': 'application/json'},body=msg)
