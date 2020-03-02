@@ -1,27 +1,15 @@
-
-import credentials, json, urllib.request
-from urllib.error import HTTPError
-import urllib3
-
-#Create JSon Data
-data = {"username": 'tesuser', "tweet": 'testtweet',"count":15}
-jsondata = json.dumps(data)
-print(type(jsondata))
-jsondatabytes = jsondata.encode('utf-8')
-
-#Get Endpoint
-url = credentials.PowerBICredentials['URLEndpoint']
-print(url)
-
-#Create Request 
-#headers = {'content-type': 'application/json'}
-#response = requests.post(url,data=jsondata, headers=headers)
+import logging
+import threading
+import time
+import stream_Generic
 
 
 
+#arraySubjects = ['Biden','Bloomberg']
+#print(arraySubjects.length())
 
-http = urllib3.PoolManager()
+#for i in range(3):                                                                                                                       
+#    t = Thread(target = stream_twitter_topic(arraySubjects[i]))                                                                                                           
+#    threads.append(t)
 
-r = http.request('POST', url ,headers={'Content-Type': 'application/json'},body=jsondata)
-
-print (r.read()) 
+#t.start

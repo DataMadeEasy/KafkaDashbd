@@ -13,9 +13,16 @@ csecret = credentials.TwitterCredentials['APISecretKey']
 atoken = credentials.TwitterCredentials['AccessToken']
 asecret = credentials.TwitterCredentials['AccessTokenSecret']
 
+#----------------Create a KafkaProducer
 producer = KafkaProducer(bootstrap_servers=['PL-KAFKA-1:9092'])
 
-subject = 'Bloomberg'
+
+
+#-----------------Pick a topic you would like to follow ----------------
+subject = 'BTS'
+
+
+
 
 class listener(StreamListener):
 
@@ -41,6 +48,8 @@ class listener(StreamListener):
         jsontest = {"subject":subject, "created_at": created_at, "tweet": tweet, "source": source,  "user_name": user_name, "user_screenname": user_screenname, "user_location": user_location, "user_followerscount": user_followerscount, "user_timezone": user_timezone, "geo": geo}
         print(jsontest)
 
+
+        #-----------Send data to Kafka---------------------
         jd = json.dumps(jsontest)
         producer.send('numtest', jd.encode('utf-8'))
         return(True)
@@ -48,8 +57,11 @@ class listener(StreamListener):
     def on_error(self, status):
         print (status)
 
+#-----------Create authorization for twitter
 auth = OAuthHandler(ckey, csecret)
 auth.set_access_token(atoken, asecret)
 
+
+#----------Create twitter stream
 twitterStream = Stream(auth, listener())
 twitterStream.filter(track=[subject])
